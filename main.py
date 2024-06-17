@@ -1,12 +1,10 @@
 import numpy as np
-import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.utils import to_categorical
 
 from models import Sequential
 from layers import Dense, RNN
-from losses import Cross_entropy
 from optimizers import Adam
 
 text = [
