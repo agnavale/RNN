@@ -73,14 +73,12 @@ class RNN(Layer):
         prev_state = np.zeros((batch_size, self.units))
       
         for t in range(timesteps):
-            state = self.activation.forward(
+            self.states[:,t,:] = self.activation.forward(
                 np.dot(input[:,t,:],self.parameters["weights"]) + 
                 np.dot(prev_state, self.parameters["recurrent_weights"]) + 
                 self.parameters["bias"]
             )
-            self.states[:,t,:] = self.activation.forward(state)
             prev_state = self.states[:,t,:]
-    
         return self.states[:,-1,:]
 
     def backward(self, output_gradient):
