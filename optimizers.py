@@ -40,22 +40,29 @@ class RMSprop:
             layer.square[key] =  np.clip(self.beta * layer.square[key] + (1-self.beta) * np.square(layer.gradients[key]), 1e-8, 1e+8)
             layer.parameters[key] -= self.learning_rate * layer.gradients[key] / np.sqrt(layer.square[key])
 
+
 class Adam:
     def __init__(self, learning_rate = 0.1, beta1 = 0.9, beta2 = 0.99):
         self.learning_rate = learning_rate
         self.beta1 = beta1
         self.beta2 = beta2
+        self.iteration = 0
 
-    def update_parms(self,layer):
-        if not hasattr(layer, "velocity"):
-            layer.velocity = {}
-            layer.square = {}
+    def update_parms(self,layers):
+        self.iteration += 1  
+        for layer in layers:
+            if not hasattr(layer, "velocity"):
+                layer.velocity = {}
+                layer.square = {}
+                for key in layer.parameters.keys():
+                    layer.velocity[key] = np.zeros(np.shape(layer.parameters[key]))
+                    layer.square[key] = np.zeros(np.shape(layer.parameters[key]))
+                
+
             for key in layer.parameters.keys():
-                layer.velocity[key] = np.zeros(np.shape(layer.parameters[key]))
-                layer.square[key] = np.zeros(np.shape(layer.parameters[key]))
-               
+                layer.velocity[key] = self.beta1 *  layer.velocity[key] + (1-self.beta1)* layer.gradients[key]
+                layer.square[key] =  np.clip(self.beta2 * layer.square[key] + (1-self.beta2) * np.square(layer.gradients[key]), 1e-8, 1e+8)
 
-        for key in layer.parameters.keys():
-            layer.velocity[key] = self.beta1 *  layer.velocity[key] + (1-self.beta1)* layer.gradients[key]
-            layer.square[key] =  np.clip(self.beta2 * layer.square[key] + (1-self.beta2) * np.square(layer.gradients[key]), 1e-8, 1e+8)
-            layer.parameters[key] -= self.learning_rate * layer.velocity[key] / np.sqrt(layer.square[key])
+                v_corrected = layer.velocity[key] / (1-np.power(self.beta1, self.iteration))
+                s_correcred = layer.square[key] / (1-np.power(self.beta2, self.iteration))
+                layer.parameters[key] -= self.learning_rate * v_corrected / s_correcred
