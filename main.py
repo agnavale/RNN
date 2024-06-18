@@ -9,6 +9,8 @@ from optimizers import Adam
 
 text = [
     "I am not interested in cars or electric appliances .",
+    "And my ankle and knee are in pain It is very painful .",
+    "I understand it is a dream ."
 ]
 corpus = [line.split(" ") for line in text]
 
@@ -40,9 +42,9 @@ model = Sequential()
 model.add(RNN(total_words,5))
 model.add(Dense(5, total_words,activation = "Softmax"))
 
-adam = Adam(learning_rate=1e-4)
+adam = Adam(learning_rate=1e-5)
 model.compile(loss = 'Cross_entropy', optimizer=adam, metric=None)
-model.fit(xs, ys, batch_size = np.size(xs), epochs=30000)
+model.fit(xs, ys, batch_size = np.size(xs), epochs=1000)
 
 
 #driver code
