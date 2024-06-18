@@ -12,8 +12,8 @@ text = [
     "And my ankle and knee are in pain It is very painful .",
     "I understand it is a dream ."
 ]
-corpus = [line.split(" ") for line in text]
 
+corpus = [line.split(" ") for line in text]
 tokenizer = Tokenizer(oov_token="<OOV>")
 tokenizer.fit_on_texts(corpus)
 # print(tokenizer.word_index)
