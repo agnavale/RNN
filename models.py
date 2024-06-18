@@ -19,8 +19,6 @@ class Sequential:
     def predict(self,input):
         output = input
         for layer in self.layers:
-            # print(f"{type(layer)}")
-            # print(layer.parameters)
             output = layer.forward(output)
         return output
 
@@ -28,26 +26,26 @@ class Sequential:
         #batch gradient decend
         x_batches = utils.create_batches(x_train,batch_size)
         y_batches = utils.create_batches(y_train,batch_size)
-        
-         # optimizer
+        # optimizer
         optimizer = utils.initiate_optimzer(self.optimizer)
-
         for e in range(epochs):
             error = 0
             for x, y in zip(x_batches, y_batches):
                 # forward
                 output = self.predict(x)
-
+                
                 # error
                 loss = utils.initiate_loss(self.loss)
                 error += loss.forward(y,output)
-                grad = loss.backward(y,output)
-
+                gradient = loss.backward(y,output)
+                
                 # backward
                 for layer in reversed(self.layers):
-                    grad = layer.backward(grad)
-                    optimizer.update_parms(layer)
-                
+                    gradient = layer.backward(gradient)
+                    
+                # update parameters
+                optimizer.update_parms(self.layers)
+
             error /= len(x_train)
             if verbose:
                 print(f"{e + 1}/{epochs}, error={error}")
