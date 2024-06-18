@@ -39,8 +39,8 @@ ys = to_categorical(labels, num_classes=total_words)
 
 # #train Neural Network
 model = Sequential()
-model.add(RNN(total_words,5))
-model.add(Dense(5, total_words,activation = "Softmax"))
+model.add(RNN(total_words,10))
+model.add(Dense(10, total_words,activation = "Softmax"))
 
 adam = Adam(learning_rate=1e-5)
 model.compile(loss = 'Cross_entropy', optimizer=adam, metric=None)
